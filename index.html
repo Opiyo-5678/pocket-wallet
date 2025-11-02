@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Wallet - Stellar Pocket Money</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    
+    <!-- SCREEN 1: LANDING / CREATE WALLET -->
+    <div id="screen-landing" class="screen active">
+        <div class="container">
+            <header class="header-main">
+                <h1>Pocket Wallet</h1>
+                <p class="subtitle">Stellar pocket money for daily spending</p>
+            </header>
+            
+            <div class="content">
+                <div class="info-box">
+                    <p>Simple wallet for micro-transactions</p>
+                    <p class="limit-info">Maximum balance: $50</p>
+                </div>
+                
+                <div class="button-group">
+                    <button id="btn-create-wallet" class="btn btn-primary">Create New Wallet</button>
+                    <!--button id="btn-import-wallet" class="btn btn-secondary">Import Existing Wallet</!--button-->
+                </div>
+                
+                <div class="footer-info">
+                    <p>Keep large amounts in secure wallets like LOBSTR</p>
+                    <p>This wallet is for spending only</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: PIN SETUP -->
+    <div id="screen-pin-setup" class="screen">
+        <div class="container">
+            <div class="header-bar">
+                <button class="btn-back" id="btn-back-pin">&larr; Back</button>
+                <h2>Set PIN</h2>
+                <div></div>
+            </div>
+            
+            <div class="content">
+                <p class="instruction">Enter 6-digit PIN to protect your wallet</p>
+                
+                <div class="pin-input">
+                    <input type="password" maxlength="1" class="pin-digit" id="pin1">
+                    <input type="password" maxlength="1" class="pin-digit" id="pin2">
+                    <input type="password" maxlength="1" class="pin-digit" id="pin3">
+                    <input type="password" maxlength="1" class="pin-digit" id="pin4">
+                    <input type="password" maxlength="1" class="pin-digit" id="pin5">
+                    <input type="password" maxlength="1" class="pin-digit" id="pin6">
+                </div>
+                
+                <p class="warning">Low security: Use only for pocket money amounts</p>
+                
+                <button id="btn-confirm-pin" class="btn btn-primary" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: BACKUP PHRASE -->
+    <div id="screen-backup" class="screen">
+        <div class="container">
+            <div class="header-bar">
+                <div></div>
+                <h2>Backup Phrase</h2>
+                <div></div>
+            </div>
+            
+            <div class="content">
+                <p class="instruction">Write down these 12 words in order</p>
+                <p class="warning">Only way to recover wallet if device lost</p>
+                
+                <div id="backup-phrase" class="backup-words"></div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="backup-confirm">
+                    <label for="backup-confirm">I have written down my backup phrase</label>
+                </div>
+                
+                <button id="btn-finish-setup" class="btn btn-primary" disabled>Continue to Wallet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: DASHBOARD -->
+    <div id="screen-dashboard" class="screen">
+        <div class="container">
+            <header class="header-bar">
+                <button class="btn-menu" id="btn-menu">☰</button>
+                <h2>Pocket Wallet</h2>
+                <button class="btn-refresh" id="btn-refresh">↻</button>
+            </header>
+            
+            <div class="content">
+                <!-- Balance Display -->
+                <div class="balance-card">
+                    <p class="label">Total Balance</p>
+                    <h1 class="balance-usd" id="balance-usd">$0.00</h1>
+                    <div class="balance-details">
+                        <p id="balance-xlm">0 XLM</p>
+                        <p id="balance-usdc" class="hidden">0.00 USDC</p>
+                    </div>
+                    <div id="limit-warning" class="limit-warning hidden">
+                        Approaching max balance limit ($50)
+                    </div>
+                </div>
+
+                <!-- USDC Status & Add Button -->
+                <div class="token-section">
+                    <div class="token-info">
+                        <p class="token-label">USDC Stablecoin</p>
+                        <span id="usdc-status" class="usdc-status disabled">Not Enabled</span>
+                    </div>
+                    <button id="btn-add-usdc" class="btn btn-token">
+                        ➕ Add USDC
+                    </button>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button id="btn-send" class="btn btn-primary">Send</button>
+                    <button id="btn-receive" class="btn btn-secondary">Receive</button>
+                </div>
+                
+                <button id="btn-topup" class="btn btn-outline">Top Up from LOBSTR</button>
+                
+                <!-- Transaction History -->
+                <div class="transactions">
+                    <h3>Recent Transactions</h3>
+                    <div id="transaction-list" class="transaction-list">
+                        <p class="empty-state">No transactions yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: SEND -->
+    <div id="screen-send" class="screen">
+        <div class="container">
+            <div class="header-bar">
+                <button class="btn-back" id="btn-back-send">&larr; Back</button>
+                <h2>Send Payment</h2>
+                <div></div>
+            </div>
+            
+            <div class="content">
+                <div class="form-group">
+                    <label>To Address</label>
+                    <div class="input-with-button">
+                        <input type="text" id="send-address" placeholder="G...">
+                        <button id="btn-scan-qr" class="btn-icon">📷</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Asset</label>
+                    <select id="send-asset" class="input-select">
+                        <option value="XLM">XLM (Stellar Lumens)</option>
+                        <option value="USDC" disabled>USDC (Enable first)</option>
+                    </select>
+                    <p class="input-hint">Select which currency to send</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="send-amount" placeholder="0" step="0.01">
+                    <p class="input-hint" id="send-amount-usd">≈ $0.00</p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Memo (optional)</label>
+                    <input type="text" id="send-memo" placeholder="Coffee" maxlength="28">
+                </div>
+                
+                <div class="balance-info">
+                    <p>Available: <span id="send-available">0 XLM</span></p>
+                    <p class="fee-info">Network fee: 0.00001 XLM</p>
+                </div>
+                
+                <button id="btn-confirm-send" class="btn btn-primary" disabled>Confirm Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 6: RECEIVE / TOP UP -->
+    <div id="screen-receive" class="screen">
+        <div class="container">
+            <div class="header-bar">
+                <button class="btn-back" id="btn-back-receive">&larr; Back</button>
+                <h2>Receive Payment</h2>
+                <div></div>
+            </div>
+            
+            <div class="content">
+                <p class="instruction">Your Wallet Address</p>
+                
+                <div class="qr-container">
+                    <div id="qr-code"></div>
+                </div>
+                
+                <div class="address-display">
+                    <p id="wallet-address" class="address-text">Loading...</p>
+                    <button id="btn-copy-address" class="btn btn-secondary">Copy Address</button>
+                </div>
+                
+                <div class="info-box">
+                    <p><strong>To top up from LOBSTR:</strong></p>
+                    <ol>
+                        <li>Open LOBSTR wallet</li>
+                        <li>Tap Send</li>
+                        <li>Scan QR code or paste address</li>
+                        <li>Enter amount ($50 max recommended)</li>
+                        <li>Select asset (XLM or USDC)</li>
+                    </ol>
+                    <p class="note"> Make sure recipient has USDC enabled if sending USDC</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 7: SETTINGS MENU -->
+    <div id="screen-menu" class="screen">
+        <div class="container">
+            <div class="header-bar">
+                <button class="btn-back" id="btn-back-menu">&larr; Back</button>
+                <h2>Settings</h2>
+                <div></div>
+            </div>
+            
+            <div class="content">
+                <div class="menu-list">
+                    <button class="menu-item" id="menu-backup">View Backup Phrase</button>
+                    <button class="menu-item" id="menu-trustline">Manage Tokens</button>
+                    <button class="menu-item" id="menu-network">Network: <span id="network-status">Mainnet</span></button>
+                    <button class="menu-item danger" id="menu-logout">Lock Wallet</button>
+                </div>
+                
+                <div class="app-info">
+                    <p>Pocket Wallet v1.0</p>
+                    <p>Stellar Network</p>
+                    <p class="info-note"> Keep large amounts in LOBSTR</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="loader"></div>
+        <p id="loading-text">Processing...</p>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/stellar-sdk@11.2.0/dist/stellar-sdk.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <script src="js/storage.js"></script>
+    <script src="js/stellar.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
