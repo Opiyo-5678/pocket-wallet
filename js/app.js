@@ -8,6 +8,7 @@ const App = {
     currentPin: null,
     backupPhrase: null,
     hasUSDCTrustline: false,
+    isDemoMode: false,
 
     /**
      * Initialize application
@@ -34,6 +35,11 @@ const App = {
         document.getElementById('btn-create-wallet').addEventListener('click', () => {
             UI.showScreen('screen-pin-setup');
             this.setupPinInput();
+        });
+
+        // Demo mode button
+        document.getElementById('btn-demo-mode').addEventListener('click', () => {
+            this.startDemoMode();
         });
 
         // PIN setup
@@ -125,6 +131,14 @@ const App = {
         document.getElementById('menu-logout').addEventListener('click', () => {
             this.logout();
         });
+
+        // Exit demo mode
+        const exitDemoBtn = document.getElementById('btn-exit-demo');
+        if (exitDemoBtn) {
+            exitDemoBtn.addEventListener('click', () => {
+                this.exitDemoMode();
+            });
+        }
     },
 
     /**
@@ -347,7 +361,7 @@ const App = {
         const asset = assetSelector ? assetSelector.value : 'XLM';
         
         // Validate
-        if (!Stellar.isValidAddress(address)) {
+        if (!Stellar.isValidAddress(address) && !this.isDemoMode) {
             UI.showAlert('Invalid recipient address', true);
             return;
         }
@@ -360,6 +374,33 @@ const App = {
         // Check if sending USDC without trustline
         if (asset === 'USDC' && !this.hasUSDCTrustline) {
             UI.showAlert('You need to add USDC trustline first', true);
+            return;
+        }
+
+        // DEMO MODE: Fake transaction
+        if (this.isDemoMode) {
+            UI.showLoading(`Sending ${asset}...`);
+            
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            UI.hideLoading();
+            UI.showAlert(`🎭 Demo: ${amount} ${asset} sent successfully! (Not a real transaction)`);
+            
+            // Clear form
+            document.getElementById('send-address').value = '';
+            document.getElementById('send-amount').value = '';
+            document.getElementById('send-memo').value = '';
+            
+            // Update fake balance
+            const currentBalances = {
+                XLM: asset === 'XLM' ? 10.5 - parseFloat(amount) : 10.5,
+                USDC: asset === 'USDC' ? 15.00 - parseFloat(amount) : 15.00
+            };
+            UI.updateBalance(currentBalances);
+            
+            // Return to dashboard
+            UI.showScreen('screen-dashboard');
             return;
         }
 
@@ -400,6 +441,76 @@ const App = {
             
             UI.showAlert(errorMsg, true);
             console.error(error);
+        }
+    },
+
+    /**
+     * Start Demo Mode
+     */
+    startDemoMode: function() {
+        this.isDemoMode = true;
+        
+        // Create fake wallet
+        this.currentWallet = {
+            publicKey: 'DEMO_G' + 'A'.repeat(55),
+            secretKey: 'DEMO_S' + 'A'.repeat(55)
+        };
+        
+        // Set demo state
+        this.hasUSDCTrustline = true;
+        
+        // Show dashboard
+        UI.showScreen('screen-dashboard');
+        UI.showDemoBanner();
+        
+        // Load fake demo data
+        this.loadDemoData();
+        
+        UI.showAlert('🎭 Welcome to Demo Mode! Explore with fake data. No real transactions.');
+    },
+
+    /**
+     * Load fake demo data
+     */
+    loadDemoData: function() {
+        // Fake balances
+        const demoBalances = {
+            XLM: 10.5000000,
+            USDC: 15.00
+        };
+        
+        UI.updateBalance(demoBalances);
+        UI.updateUSDCStatus(true);
+        
+        // Fake transactions
+        const demoTransactions = [
+            {
+                created_at: new Date(Date.now() - 86400000).toISOString(),
+                memo: 'Coffee at Starbucks'
+            },
+            {
+                created_at: new Date(Date.now() - 172800000).toISOString(),
+                memo: 'Lunch payment'
+            },
+            {
+                created_at: new Date(Date.now() - 259200000).toISOString(),
+                memo: 'Top up from LOBSTR'
+            }
+        ];
+        
+        UI.updateTransactions(demoTransactions);
+    },
+
+    /**
+     * Exit Demo Mode
+     */
+    exitDemoMode: function() {
+        if (confirm('Exit demo mode and return to landing page?')) {
+            this.isDemoMode = false;
+            this.currentWallet = null;
+            this.hasUSDCTrustline = false;
+            UI.hideDemoBanner();
+            UI.showScreen('screen-landing');
         }
     },
 

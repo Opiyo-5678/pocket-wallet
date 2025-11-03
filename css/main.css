@@ -672,6 +672,69 @@ body {
     color: var(--primary-green);
 }
 
+/* === DEMO MODE === */
+.btn-demo {
+    background: linear-gradient(135deg, var(--accent-purple) 0%, #8b7dd8 100%);
+    color: var(--white);
+    border: 2px solid var(--accent-purple);
+}
+
+.btn-demo:hover {
+    background: linear-gradient(135deg, #5a4dcc 0%, var(--accent-purple) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(109, 92, 255, 0.3);
+}
+
+.demo-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.demo-banner p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.demo-banner strong {
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.btn-exit-demo {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-exit-demo:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 480px) {
     .container {

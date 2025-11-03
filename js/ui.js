@@ -303,5 +303,25 @@ const UI = {
                 }
             });
         }
+    },
+
+    /**
+     * Show demo mode banner
+     */
+    showDemoBanner: function() {
+        const banner = document.getElementById('demo-banner');
+        if (banner) {
+            banner.classList.remove('hidden');
+        }
+    },
+
+    /**
+     * Hide demo mode banner
+     */
+    hideDemoBanner: function() {
+        const banner = document.getElementById('demo-banner');
+        if (banner) {
+            banner.classList.add('hidden');
+        }
     }
 };
